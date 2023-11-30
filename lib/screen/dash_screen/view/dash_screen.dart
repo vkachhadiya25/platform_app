@@ -13,30 +13,32 @@ class DashScreen extends StatefulWidget {
   State<DashScreen> createState() => _DashScreenState();
 }
 
-class _DashScreenState extends State<DashScreen> {
-  DashProvider? ProviderR;
-  DashProvider? ProviderW;
+class _DashScreenState extends State<DashScreen> with SingleTickerProviderStateMixin{
+  DashProvider? providerR;
+  DashProvider? providerW;
+
+  @override
+  void initState() {
+    super.initState();
+    context.read<DashProvider>().tabController = TabController(length: 4, vsync: this,initialIndex: 0);
+  }
 
   @override
   Widget build(BuildContext context) {
-    ProviderR = context.read<DashProvider>();
-    ProviderW = context.watch<DashProvider>();
-    return DefaultTabController(
-      length: 4,
-      initialIndex: ProviderW!.dashIndex,
-      child: Scaffold(
-        appBar: AppBar(
-          title: const Text("Platform Converter"),
-          bottom: const TabBar( tabs: [
-            Tab(icon: Icon(Icons.person_add_alt),),
-            Tab(text: "CHATS"),
-            Tab(text: "CALLS"),
-            Tab(text: "SETTINGS"),
-          ],
-          ),
+    providerR = context.read<DashProvider>();
+    providerW = context.watch<DashProvider>();
+    return Scaffold(
+      appBar: AppBar(
+        title: const Text("Platform Converter"),
+        bottom: TabBar(controller: providerW!.tabController, tabs: const [
+          Tab(icon: Icon(Icons.person_add_alt),),
+          Tab(text: "CHATS"),
+          Tab(text: "CALLS"),
+          Tab(text: "SETTINGS"),
+        ],
         ),
-        body: TabBarView(children:ProviderW!.screen ),
       ),
+      body: TabBarView(controller: providerW!.tabController,children:providerW!.screen ),
     );
   }
 }

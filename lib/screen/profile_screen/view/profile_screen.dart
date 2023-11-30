@@ -1,4 +1,7 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:platform_converter_app/screen/dash_screen/provider/dash_provider.dart';
 import 'package:platform_converter_app/screen/profile_screen/model/profile_model.dart';
 import 'package:platform_converter_app/screen/profile_screen/provider/profile_provider.dart';
@@ -11,7 +14,7 @@ class ProfileScreen extends StatefulWidget {
   State<ProfileScreen> createState() => _ProfileScreenState();
 }
 
-class _ProfileScreenState extends State<ProfileScreen> {
+class _ProfileScreenState extends State<ProfileScreen> with SingleTickerProviderStateMixin {
   ProfileProvider? providerR;
   ProfileProvider? providerW;
   TextEditingController txtName = TextEditingController();
@@ -19,6 +22,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
   TextEditingController txtChat= TextEditingController();
   TextEditingController txtDate= TextEditingController();
   TextEditingController txtTime= TextEditingController();
+  GlobalKey<FormState> textKey = GlobalKey<FormState>();
+
   @override
   Widget build(BuildContext context) {
     providerR = context.read<ProfileProvider>();
@@ -26,41 +31,102 @@ class _ProfileScreenState extends State<ProfileScreen> {
     return SingleChildScrollView(
       child: Column(
         children: [
-          const Padding(
-            padding: EdgeInsets.all(8.0),
-            child: CircleAvatar(
-              radius: 80,
-              child: Icon(Icons.camera_alt),
-            ),
+          Column(
+            children: [
+              Consumer<ProfileProvider>(builder: (context, value, child) => CircleAvatar(
+                radius: 70,
+                backgroundImage: value.path != null
+                    ? FileImage(File(value.path!))
+                    : null,
+              ),
+              ),
+              IconButton(
+                  onPressed: () async {
+                    ImagePicker imgPiker = ImagePicker();
+                    XFile? image = await imgPiker.pickImage(
+                        source: ImageSource.gallery);
+                    providerR!.updateImagePath(image!.path);
+                  },
+                  icon: const Icon(Icons.image))
+            ],
           ),
-          Padding(
-            padding: const EdgeInsets.all(8.0),
-            child: TextFormField(
-              controller: txtName,
-              decoration: const InputDecoration(
-                  border: OutlineInputBorder(),
-                  prefixIcon: Icon(Icons.person),
-                  hintText: "Full Name"),
-            ),
-          ),
-          Padding(
-            padding: const EdgeInsets.all(8.0),
-            child: TextFormField(
-              controller: txtPhoneNo,
-              decoration: const InputDecoration(
-                  border: OutlineInputBorder(),
-                  prefixIcon: Icon(Icons.call),
-                  hintText: "Phone Number"),
-            ),
-          ),
-          Padding(
-            padding: const EdgeInsets.all(8.0),
-            child: TextFormField(
-              controller: txtChat,
-              decoration: const InputDecoration(
-                  border: OutlineInputBorder(),
-                  prefixIcon: Icon(Icons.message),
-                  hintText: "Chat Conversation"),
+          Form(
+            key: textKey,
+            child: Column(
+              children: [
+                Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: TextFormField(
+                    validator: (value) {
+                      if(value == null || value.isEmpty)
+                        {
+                          return 'Please enter your full name';
+                        }
+                      return null;
+                    },
+                    onChanged: (value) {
+                      if(textKey.currentState!.validate())
+                        {
+
+                        }
+                    },
+                    keyboardType: TextInputType.name,
+                    controller: txtName,
+                    decoration: const InputDecoration(
+                        border: OutlineInputBorder(),
+                        prefixIcon: Icon(Icons.person),
+                        hintText: "Full Name"),
+                  ),
+                ),
+                Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: TextFormField(
+                    validator: (value) {
+                      if(value == null || value.isEmpty)
+                      {
+                        return 'Please enter some chat';
+                      }
+                      return null;
+                    },
+                    onChanged: (value) {
+                      if(textKey.currentState!.validate())
+                      {
+
+                      }
+                    },
+                    keyboardType: TextInputType.phone,
+                    controller: txtPhoneNo,
+                    decoration: const InputDecoration(
+                        border: OutlineInputBorder(),
+                        prefixIcon: Icon(Icons.call),
+                        hintText: "Phone Number"),
+                  ),
+                ),
+                Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: TextFormField(
+                    validator: (value) {
+                      if(value == null || value.isEmpty)
+                      {
+                        return 'Please enter your full name';
+                      }
+                      return null;
+                    },
+                    onChanged: (value) {
+                      if(textKey.currentState!.validate())
+                      {
+
+                      }
+                    },
+                    keyboardType: TextInputType.emailAddress,
+                    controller: txtChat,
+                    decoration: const InputDecoration(
+                        border: OutlineInputBorder(),
+                        prefixIcon: Icon(Icons.message),
+                        hintText: "Chat Conversation"),
+                  ),
+                ),
+              ],
             ),
           ),
           Row(
@@ -113,9 +179,11 @@ class _ProfileScreenState extends State<ProfileScreen> {
                 phone: txtPhoneNo.text,
                 date: txtDate.text,
                 time: txtTime.text,
+                image: providerR!.path,
               );
+              providerR!.updateImagePath(null);
               providerR!.addContactData(cm);
-              providerW!.dashIndex;
+              context.read<DashProvider>().changeTab(1,this);
             },
             child: const Text(
               "Save",

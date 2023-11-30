@@ -1,22 +1,25 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:platform_converter_app/screen/profile_screen/provider/profile_provider.dart';
 import 'package:provider/provider.dart';
 
-class CallScreen extends StatefulWidget {
-  const CallScreen({super.key});
+class ChatScreen extends StatefulWidget {
+  const ChatScreen({super.key});
 
   @override
-  State<CallScreen> createState() => _CallScreenState();
+  State<ChatScreen> createState() => _ChatScreenState();
 }
 
-class _CallScreenState extends State<CallScreen> {
+class _ChatScreenState extends State<ChatScreen> {
   ProfileProvider? providerR;
   ProfileProvider? providerW;
   TextEditingController txtName = TextEditingController();
-  TextEditingController txtPhoneNo= TextEditingController();
-  TextEditingController txtChat= TextEditingController();
-  TextEditingController txtDate= TextEditingController();
-  TextEditingController txtTime= TextEditingController();
+  TextEditingController txtPhoneNo = TextEditingController();
+  TextEditingController txtChat = TextEditingController();
+  TextEditingController txtDate = TextEditingController();
+  TextEditingController txtTime = TextEditingController();
+
   @override
   Widget build(BuildContext context) {
     providerR = context.read<ProfileProvider>();
@@ -25,71 +28,54 @@ class _CallScreenState extends State<CallScreen> {
       itemCount: providerW!.addDataList.length,
       itemExtent: 100,
       itemBuilder: (context, index) {
-        return Consumer(
-          builder: (context, value, child) => Padding(
-            padding: const EdgeInsets.all(8.0),
-            child: InkWell(
-              onTap: () {
-                providerR!.storeIndex(index);
-                Navigator.pushNamed(context, 'update',
-                    arguments: providerR!.addDataList[index]);
-              },
-              child: Container(
-                decoration: BoxDecoration(
-                    color: Colors.white,
-                    borderRadius: BorderRadius.circular(10)),
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.start,
+        return Padding(
+          padding: const EdgeInsets.all(8.0),
+          child: Container(
+            height: 100,
+            width: double.infinity,
+            decoration: const BoxDecoration(color: Colors.white),
+            child: Column(
+              children: [
+                Row(
                   children: [
-                    const SizedBox(
-                      height: 10,
+                     Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: CircleAvatar(
+                        radius: 30,
+                        backgroundImage: FileImage(File("${providerR!.addDataList[index].image}")),
+                      ),
                     ),
-                    Row(
-                      crossAxisAlignment: CrossAxisAlignment.start,
+                    const SizedBox(
+                      width: 10,
+                    ),
+                    Column(
                       children: [
-                        const SizedBox(
-                          height: 10,
+                        Text(
+                          "${providerR!.addDataList[index].name}",
+                          style: const TextStyle(fontSize: 20),
                         ),
-                        const SizedBox(
-                          width: 10,
-                        ),
-                        Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            const SizedBox(
-                              height: 10,
-                            ),
-                            Text(
-                              "${providerW!.addDataList[index].name}",
-                              style: const TextStyle(color: Colors.black),
-                            ),
-                            const SizedBox(
-                              height: 10,
-                            ),
-                            Text(
-                              "${providerW!.addDataList[index].chat}",
-                              style: const TextStyle(color: Colors.black),
-                            ),
-                            const Spacer(),
-                            Row(
-                              children: [
-                                Text(
-                                  "${providerW!.addDataList[index].date}",
-                                  style: const TextStyle(color: Colors.black),
-                                ),
-                                Text(
-                                  "${providerW!.addDataList[index].time}",
-                                  style: const TextStyle(color: Colors.black),
-                                ),
-                              ],
-                            )
-                          ],
+                        Text(
+                          "${providerR!.addDataList[index].chat}",
+                          style: const TextStyle(fontSize: 18),
                         ),
                       ],
                     ),
+                    const SizedBox(
+                      width: 20,
+                    ),
+                    Column(
+                      children: [
+                        Text(
+                          "${providerR!.date!.day}/${providerR!.date!.month}/${providerR!.date!.year}",
+                          style: const TextStyle(fontSize: 17),
+                        ),
+                        Text("${providerR!.time!.hour}:${providerR!.time!.minute}",style: const TextStyle(fontSize: 17),),
+
+                      ],
+                    ),
                   ],
-                ),
-              ),
+                )
+              ],
             ),
           ),
         );

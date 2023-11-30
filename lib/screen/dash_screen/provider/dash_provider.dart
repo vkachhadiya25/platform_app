@@ -7,15 +7,19 @@ import '../../setting_screen/view/setting_screen.dart';
 
 class DashProvider with ChangeNotifier{
   int dashIndex=0;
+  TabController? tabController;
   List<Widget> screen = [
     const ProfileScreen(),
     const ChatScreen(),
     const CallScreen(),
     const SettingScreen(),
   ];
-  void changeStep (i) {
-    dashIndex = i;
+
+  void changeTab(int i,TickerProvider thisProvider)
+  {
+    tabController =TabController(length: 4, vsync:thisProvider,initialIndex: i);
     notifyListeners();
   }
+
 
 }
