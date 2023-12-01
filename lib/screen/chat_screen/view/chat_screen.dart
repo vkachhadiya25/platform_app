@@ -43,6 +43,7 @@ class _ChatScreenState extends State<ChatScreen> {
                     Padding(
                       padding: const EdgeInsets.all(8.0),
                       child:
+                      providerW!.addDataList[index].image != null?
                       InkWell(
                         onTap: () {
                          ProfileModal c1 = ProfileModal(
