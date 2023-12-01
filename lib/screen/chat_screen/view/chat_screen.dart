@@ -1,7 +1,9 @@
 import 'dart:io';
 
 import 'package:flutter/material.dart';
+import 'package:platform_converter_app/screen/profile_screen/model/profile_model.dart';
 import 'package:platform_converter_app/screen/profile_screen/provider/profile_provider.dart';
+import 'package:platform_converter_app/screen/widget/alert_dailog.dart';
 import 'package:provider/provider.dart';
 
 class ChatScreen extends StatefulWidget {
@@ -38,11 +40,24 @@ class _ChatScreenState extends State<ChatScreen> {
               children: [
                 Row(
                   children: [
-                     Padding(
+                    Padding(
                       padding: const EdgeInsets.all(8.0),
-                      child: CircleAvatar(
-                        radius: 30,
-                        backgroundImage: FileImage(File("${providerR!.addDataList[index].image}")),
+                      child:
+                      InkWell(
+                        onTap: () {
+                         ProfileModal c1 = ProfileModal(
+                           name: providerR!.addDataList[index].name,
+                           chat: providerR!.addDataList[index].chat,
+                           image: providerR!.addDataList[index].image,
+                         );
+                         providerR!.storeIndex(index);
+                       updateWidget(context, c1);
+                        },
+                        child: CircleAvatar(
+                          radius: 30,
+                          backgroundImage: FileImage(
+                              File("${providerR!.addDataList[index].image}")),
+                        ),
                       ),
                     ),
                     const SizedBox(
@@ -69,8 +84,10 @@ class _ChatScreenState extends State<ChatScreen> {
                           "${providerR!.date!.day}/${providerR!.date!.month}/${providerR!.date!.year}",
                           style: const TextStyle(fontSize: 17),
                         ),
-                        Text("${providerR!.time!.hour}:${providerR!.time!.minute}",style: const TextStyle(fontSize: 17),),
-
+                        Text(
+                          "${providerR!.time!.hour}:${providerR!.time!.minute}",
+                          style: const TextStyle(fontSize: 17),
+                        ),
                       ],
                     ),
                   ],
@@ -83,34 +100,3 @@ class _ChatScreenState extends State<ChatScreen> {
     );
   }
 }
-/*                        Padding(
-                          padding: const EdgeInsets.all(8.0),
-                          child: CircleAvatar(
-                            radius: 25,
-                            child: Column(
-                              children: [
-                                providerW!.addDataList[index].image != null
-                                    ? CircleAvatar(
-                                  radius: 25,
-                                  backgroundImage: FileImage(File(
-                                      "${providerW!.addDataList[index].image}")),
-                                )
-                                    : Container(
-                                  height: 50,
-                                  width: 50,
-                                  alignment: Alignment.center,
-                                  decoration: const BoxDecoration(
-                                      shape: BoxShape.circle,
-                                      color: Colors.black),
-                                  child: Text(
-                                    "${providerW!.addDataList[index].fName!.isNotEmpty ? providerW!.addDataList[index].fName?.substring(0, 1).toUpperCase() : 0}",
-                                    style: const TextStyle(
-                                        fontSize: 20,
-                                        color: Colors.white),
-                                  ),
-                                ),
-                              ],
-                            ),
-                          ),
-                        ),
-*/

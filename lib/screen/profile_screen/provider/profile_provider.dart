@@ -12,6 +12,7 @@ class ProfileProvider with ChangeNotifier
   int? infoIndex;
   String? path;
 
+
   List<ProfileModal> addDataList = [];
   List<Widget> screen = [
     const ProfileScreen(),
@@ -30,8 +31,7 @@ class ProfileProvider with ChangeNotifier
     notifyListeners();
   }
 
-  void updateImagePath(String? newPath)
-  {
+  void updateImagePath(String? newPath) {
     path = newPath;
     notifyListeners();
   }
@@ -46,4 +46,14 @@ class ProfileProvider with ChangeNotifier
     notifyListeners();
   }
 
+  void editContact(ProfileModal cm) {
+    addDataList[infoIndex!] = cm;
+    notifyListeners();
+  }
+
+  void deleteContact()
+  {
+    addDataList.removeAt(infoIndex!);
+    notifyListeners();
+  }
 }

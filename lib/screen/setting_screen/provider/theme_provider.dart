@@ -4,7 +4,7 @@ import '../../../utils/shared_preference.dart';
 
 class ThemeProvider with ChangeNotifier
 {
-  bool isLight = false;
+  bool isLight = true;
 
   void changeTheme()
   async{
