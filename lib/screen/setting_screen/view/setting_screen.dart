@@ -67,7 +67,7 @@ class _SettingScreenState extends State<SettingScreen> {
                       crossAxisAlignment: CrossAxisAlignment.center,
                       children: [
                         const SizedBox(height: 10,),
-                        Consumer<ProfileProvider>(builder: (context, value, child) => CircleAvatar(
+                        Consumer<SettingProvider>(builder: (context, value, child) => CircleAvatar(
                           radius: 70,
                           backgroundImage: value.path != null
                               ? FileImage(File(value.path!))

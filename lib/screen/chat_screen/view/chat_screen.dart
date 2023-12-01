@@ -46,18 +46,25 @@ class _ChatScreenState extends State<ChatScreen> {
                       providerW!.addDataList[index].image != null?
                       InkWell(
                         onTap: () {
-                         ProfileModal c1 = ProfileModal(
-                           name: providerR!.addDataList[index].name,
-                           chat: providerR!.addDataList[index].chat,
-                           image: providerR!.addDataList[index].image,
-                         );
-                         providerR!.storeIndex(index);
-                       updateWidget(context, c1);
+                          ProfileModal c1 = ProfileModal(
+                            name: providerR!.addDataList[index].name,
+                            chat: providerR!.addDataList[index].chat,
+                            image: providerR!.addDataList[index].image,
+                          );
+                          providerR!.storeIndex(index);
+                          updateWidget(context, c1);
                         },
-                        child: CircleAvatar(
+                        child: providerR!.addDataList[index].image != null ?
+                        CircleAvatar(
                           radius: 30,
                           backgroundImage: FileImage(
                               File("${providerR!.addDataList[index].image}")),
+                        ): CircleAvatar(
+                          radius: 30,
+                          child: Text(
+                            "${providerR!.addDataList[index].name!.substring(0, 1).toUpperCase()}",
+                            style: Theme.of(context).textTheme.titleLarge,
+                          ),
                         ),
                       ),
                     ),

@@ -184,6 +184,7 @@ class _ProfileScreenState extends State<ProfileScreen> with SingleTickerProvider
               providerR!.updateImagePath(null);
               providerR!.addContactData(cm);
               context.read<DashProvider>().changeTab(1,this);
+              providerR!.path!;
             },
             child: const Text(
               "Save",
