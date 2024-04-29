@@ -1,23 +1,24 @@
-import 'dart:io';
-
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:platform_converter_app/screen/dash_screen/provider/dash_provider.dart';
-import 'package:platform_converter_app/screen/profile_screen/provider/profile_provider.dart';
-import 'package:platform_converter_app/screen/setting_screen/provider/setting_provider.dart';
-import 'package:platform_converter_app/screen/setting_screen/provider/theme_provider.dart';
-import 'package:platform_converter_app/utils/app_theme.dart';
-import 'package:platform_converter_app/utils/screen_routs.dart';
+import 'package:platform_converter_app/screen/dash/provider/dash_ios_provider.dart';
+import 'package:platform_converter_app/screen/home/provider/home_provider.dart';
+import 'package:platform_converter_app/screen/setting/provider/setting_provider.dart';
+import 'package:platform_converter_app/utils/Theme/provider/theme_provider.dart';
+import 'package:platform_converter_app/utils/Theme/view/theme_app.dart';
+
 import 'package:provider/provider.dart';
 
+import 'utils/app_routes.dart';
+
 void main() {
-  runApp(MultiProvider(
+  runApp(
+    MultiProvider(
       providers: [
         ChangeNotifierProvider(
-          create: (context) => DashProvider(),
+          create: (context) => HomeProvider(),
         ),
         ChangeNotifierProvider(
-          create: (context) => ProfileProvider(),
+          create: (context) => DashIosProvider(),
         ),
         ChangeNotifierProvider(
           create: (context) => SettingProvider(),
@@ -28,16 +29,22 @@ void main() {
       ],
       child: Consumer<ThemeProvider>(
         builder: (context, value, child) {
-          value.changeTheme();
-          return MaterialApp(
-            theme: value.isLight ? isDark : isLight,
+          value.changeThem();
+          return context
+              .read<ThemeProvider>()
+              .isUi ?
+          MaterialApp(
+            theme: value.isLight ? lightTheme : darkTheme,
             debugShowCheckedModeBanner: false,
-            routes: screenRoutes,
-          );
+            routes: Android_screen_routes,
+          ):CupertinoApp(
+                  theme:
+                      value.isLight ? lightCupertinoTheme : darkCupertinoTheme,
+                  debugShowCheckedModeBanner: false,
+                  routes: ios_screen_routes,
+                );
         },
-      )
-      // : CupertinoApp(
-      //   debugShowCheckedModeBanner: false,
-      //   routes: screenIos,),
-      ));
+      ),
+    ),
+  );
 }
